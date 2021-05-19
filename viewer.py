@@ -49,13 +49,18 @@ class App(Frame):
         self.la = Label(self)
         self.la.pack()
 
+        # <Button>: both buttons <Double-1>: double right click
+        self.la.bind("<Button-1>", self.on_click)
+
         # center window
-        pRight = int((self.winfo_screenmmwidth() - self.winfo_reqwidth()) / 2 )
-        pDown = int((self.winfo_screenmmheight() - self.winfo_reqheight()) / 2 )
+        pRight = int((self.winfo_screenmmwidth() - self.winfo_reqwidth()) / 2)
+        pDown = int((self.winfo_screenmmheight() - self.winfo_reqheight()) / 2)
         self.place(cnf={"x": pRight, "y": pDown})
 
         self.pack()
 
+    def on_click(self, event):
+        print("Mouse position: (%s %s)" % (event.x, event.y))
 
     def _update_img(self, im):
         if im.mode == "1":
