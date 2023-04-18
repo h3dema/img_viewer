@@ -38,12 +38,22 @@ class App(Frame):
 
         self.perc = 0.1  # increment of the zoom
 
+        out_fram = Frame(self, width=300, height=16)
         fram = Frame(self)
-        Button(fram, text="Open file", command=self.open).pack(side=LEFT)
+        self.btOpen = Button(fram, text="Open file", command=self.open)
+        self.btOpen.pack(side=LEFT)
         Button(fram, text="Close file", command=self.close).pack(side=LEFT)
         Button(fram, text="Zoom +", command=self.zoom_up).pack(side=LEFT)
         Button(fram, text="Zoom -", command=self.zoom_down).pack(side=LEFT)
-        fram.pack(side=TOP, fill=BOTH)
+        out_fram.pack(side=TOP, fill=BOTH)
+        fram.place(in_=out_fram, anchor="c", relx=.5, rely=.5)
+        #
+        # bind keyboard
+        #
+        self.master.bind('o', self.open)
+        self.master.bind('c', self.close)
+        self.master.bind('+', self.zoom_up)
+        self.master.bind('-', self.zoom_down)
         # indicates the number of the picture
 
         self.la = Label(self)
@@ -77,12 +87,12 @@ class App(Frame):
                        height=img.height())
         self.la.image = img
 
-    def close(self):
+    def close(self, _event=None):
         self.filename = None
         self.img = None
         self.la.config(image="")
 
-    def open(self):
+    def open(self, _event=None):
         filename = filedialog.askopenfilename()
         if filename != "":
             self.img = Image.open(filename)
@@ -95,20 +105,20 @@ class App(Frame):
                          Image.ANTIALIAS)
         return img
 
-    def _zoom(self):
+    def _zoom(self, _event=None):
         if self.img is None:
             return
         img = self.img.copy()
         img = self.resize(img, self.zoom)
         self._update_img(img)
 
-    def zoom_up(self):
+    def zoom_up(self, _event=None):
         self.zoom = self.zoom + self.perc
         if self.zoom > 5:
             self.zoom = 5
         self._zoom()
 
-    def zoom_down(self):
+    def zoom_down(self, _event=None):
         self.zoom = self.zoom - self.perc
         if self.zoom < 0.1:
             self.zoom = 0.1
